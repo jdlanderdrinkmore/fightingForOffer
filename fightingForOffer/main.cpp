@@ -14,8 +14,8 @@
 #include <map>
 #include <deque>
 #include <algorithm>
+#include <mutex>
 #include <math.h>
-#include <semaphore.h>
 #include <cmath>
 #include <assert.h>
 #include <memory>
@@ -24,6 +24,7 @@
 #include <numeric>
 #include <functional>
 #include <set>
+#include <cstring>
 #define index int
 
 using namespace std;
@@ -55,7 +56,7 @@ public:
             }
             road_p.push_back(foot);
         }
-        
+
         foot = root;
         road_q.push_back(foot);
         while (foot != NULL && foot->val != q->val) {
@@ -68,14 +69,14 @@ public:
             }
             road_q.push_back(foot);
         }
-        
+
         for (int i = min(road_q.size(), road_p.size()) - 1;i >= 0; --i) {
             if (road_q.at(i)->val == road_p.at(i)->val) {
                 return road_q.at(i);
             }
         }
-        
-        
+
+
         return NULL;
     }
 };
@@ -88,7 +89,7 @@ public:
         }
         if(num == 1)
             return true;
-        
+
         while (num > 1) {
             if (num % 2 == 0) {
                 num /= 2;
@@ -124,7 +125,7 @@ public:
 
 class Solution4 {
 public:
-    
+
     bool isPalindrome(const char* begin,const char* end)
     {
         while (begin < end) {
@@ -160,7 +161,7 @@ public:
         if (numRows == 1) {
             return s;
         }
-        
+
         if(numRows == 2)
         {
             for (int i = 0; i < 2; ++i) {
@@ -314,24 +315,24 @@ void print_total(ostream &os,
 }
 
 #pragma mark - 面试题2:单例模式
-sem_t *mutex = sem_open("se", 1);  //加锁，避免多线程调用单例模式产生问题
-class Singleton {
-    Singleton(){num = 1;};
-public:
-    int num;
-    static Singleton* instance;
-    static Singleton* get_singleton() {
-        if (instance == NULL) {
-            sem_wait(::mutex);
-            if (instance == NULL) {
-                instance = new Singleton();
-            }
-            sem_post(::mutex);
-        }
-        return instance;
-    }
-};
-Singleton *Singleton::instance = NULL;
+//sem_t *mutex = sem_open("se", 1);  //加锁，避免多线程调用单例模式产生问题
+//class Singleton {
+//    Singleton(){num = 1;};
+//public:
+//    int num;
+//    static Singleton* instance;
+//    static Singleton* get_singleton() {
+//        if (instance == NULL) {
+//            sem_wait(::mutex);
+//            if (instance == NULL) {
+//                instance = new Singleton();
+//            }
+//            sem_post(::mutex);
+//        }
+//        return instance;
+//    }
+//};
+//Singleton *Singleton::instance = NULL;
 #pragma mark - 面试题3:二维数组中的查找
 bool Find_matrix(int *matrix,int column,int row,int value)
 {
@@ -383,7 +384,7 @@ void ReplaceBlank(char string[],int length)
             *p_old_tail++= '2';
             *p_old_tail++ = '0';
         }
-        
+
     }
 }
 
@@ -435,7 +436,7 @@ void RemoveNode(ListNode **list,int value)
             nodeDeleted = NULL;
         }
     }
-    
+
 }
 
 #pragma mark - 面试题5:从尾到头遍历链表
@@ -456,7 +457,7 @@ void printListReversingly_Iterator(ListNode* list)
         cout<<nodes.top()->value<<endl;
         nodes.pop();
     }
-    
+
 }
 
 void printListReversingly_Recursively(ListNode *list)
@@ -529,7 +530,7 @@ template <typename T>
 class CQueue {
     stack<T> stack1;
     stack<T> stack2;
-    
+
 public:
     CQueue(){stack1 = stack<T>(); stack2 = stack<T>();};
     ~CQueue(){};
@@ -558,7 +559,7 @@ template<typename  T> T CQueue<T>::deleteHead()
             }
         }
     }
-    
+
     T temp = stack1.top();
     stack1.pop();
     return temp;
@@ -576,7 +577,7 @@ template<typename  T> T CQueue<T>::deleteHead()
 
 int finMin(int *begin,int *end)
 {
-    
+
     if (begin == NULL || end == NULL) {
         return NULL;
     }
@@ -623,7 +624,7 @@ long long Fibonacci_Recursively(unsigned n)
     if (n == 1) {
         return 1;
     }
-    
+
     return Fibonacci_Recursively(n - 1) + Fibonacci_Recursively(n - 2);
 }
 
@@ -786,7 +787,7 @@ void Print1ToMaxOfDigitals_2(int n)       //能够处理大数
     char* num = new char[n + 1];
     memset(num, '0', n);
     num[n] = '\0';
-    
+
     while (!isMaxAfterIncrement(num)) {
         print_num(num);
     }
@@ -1161,9 +1162,9 @@ bool VerifySequenceOfBST(int sequence[],int length)
     if (length <= 1) {
         return true;
     }
-    
-    
-    
+
+
+
     int i = 0;
     while (sequence[i] < sequence[length - 1] && i <= length - 2) {
         i++;
@@ -1402,7 +1403,7 @@ int MoreThanHalfNum(int* numbers,int length)
         cout<<"Invalid input";
         return -1;
     }
-    
+
     int temp = 0, temp_count = 0;
     for (int i = 0 ; i < length - 1; ++i) {
         if (temp_count == 0) {
@@ -1636,7 +1637,7 @@ ListNode* firstCommeNode(ListNode* pHead_1,ListNode* pHead_2)
     if (pHead_1 == NULL || pHead_2 == NULL) {
         return NULL;
     }
-    
+
     int len_1 = lengthOfLinklist(pHead_1);
     int len_2 = lengthOfLinklist(pHead_2);
     if (len_1 > len_2) {
@@ -1661,7 +1662,7 @@ ListNode* firstCommeNode(ListNode* pHead_1,ListNode* pHead_2)
         return pHead_1;
     }
     return NULL;
-    
+
 }
 
 #pragma mark - 知识迁移能力
@@ -1687,7 +1688,7 @@ int GetFirstK(int *data, int length, int k, int begin, int end)
     else
         end = pos - 1;
     return GetFirstK(data, length, k, begin, end);
-    
+
 }
 int GetLastK(int *data, int length, int k, int begin, int end)
 {
@@ -1752,7 +1753,7 @@ bool isBalanceTree(TreeNode* root)
         return false;
     }
     return isBalanceTree(root->left) && isBalanceTree(root->right);
-    
+
 }
 //NO_2
 bool isBalanceTree_2(TreeNode* root)
@@ -1854,7 +1855,7 @@ void numberApearOnce(vector<int> nums, int& num1, int& num2)
     for (int i = 0; i < vec_2.size(); ++i) {
         num2 ^= vec_2[i];
     }
-    
+
 }
 
 #pragma mark - 面试题41：数组中和为 S 的两个数字
@@ -2009,7 +2010,7 @@ void PrintProbability(int number)
     for (int i = 0; i < len; ++i) {
         p[i] = 0;
     }
-    
+
     probability(number,p);
     double allPossibility = pow(6, number);
     for (int i = 0; i < len; ++i) {
@@ -2207,10 +2208,10 @@ bool isNumber(char* str)
         }
         else
             numeric = false;
-        
+
     }
     return numeric ? *str == '\0' : false;
-    
+
     //    int len = strlen(str);
     //    for (int i = 0; i < len; ++i) {
     //        if (i == 0 && (str[i] == '-' || str[i] == '+')) {
@@ -2243,7 +2244,7 @@ char firstApearingOnce(char* str)
             hashTable[*(str + i)] = -2;
     }
     for (int i = 0; i < 256; ++i) {         //遍历哈希表，出现的第一个不为-1和-2的值是第一个出现一次的字符
-        
+
         if (hashTable[i] != -1 && hashTable[i] != -2) {
             return *(str + hashTable[i]);
         }
@@ -2413,7 +2414,7 @@ void print(BinaryTreeNode* root)
         current_node_num = next_level_node_num;
         next_level_node_num = 0;
     }
-    
+
 }
 
 #pragma mark - 面试题61：按Z 字型打印二叉树
@@ -2448,9 +2449,9 @@ void printZigzag(BinaryTreeNode* root)        //用两个栈将每一层的节�
             current = 1 - current;
             cout<<endl;
         }
-        
+
     }
-    
+
 }
 
 #pragma mark - 面试题62：二叉树的序列化和反序列化
@@ -2658,7 +2659,7 @@ int lcs(vector<int>& a,vector<int>& b)
     for (int i = 0; i < b_size; ++i) {
         *(nums + i) = (int *)malloc(a_size * sizeof(int));
     }
-    
+
     for (int i = 0; i < b_size; ++i) {
         nums[i][0] = 0;
     }
@@ -2764,7 +2765,7 @@ public:
             temp.push_back(str_2);
             return temp;
         }
-        
+
         vector<string> temp = getGray(n - 1);
         int size = pow(2,n);
         vector<string> result(pow(2,n),string());
@@ -2773,13 +2774,13 @@ public:
             result[i] = string("0") + temp[i];
             result[size - 1 - i] = string("1") + temp[i];
         }
-        
+
         return result;
     }
 };
 class Gift {
 public:
-    
+
     int partition(vector<int>& nums,int l,int r){
         int key = l;
         int pivot = nums[key];
@@ -2808,8 +2809,8 @@ public:
                 r = index_t - 1;
             index_t = partition(gifts, l, r);
         }
-        
-        
+
+
         int result = gifts[index_t];
         int sum = 0;
         for (int i = 0; i < n; ++i) {
@@ -2888,7 +2889,7 @@ void fun_3(){
         int result = 0;
         int i = 0;
         for(; i < n; ++i){
-            
+
             if(p[(vec[i] % pp) - 1] == 1){
                 cout<<vec[i] % pp<<endl;
                 result = i + 1;
@@ -2960,7 +2961,7 @@ void fun_4(){
                     break;
                 }
             }
-            
+
             if (result || result_1) {
                 cout<<"YES"<<endl;
             }
@@ -3014,13 +3015,13 @@ void fun_4(){
                     break;
                 }
             }
-            
+
             if (result_1 || result_2 || result_3) {
                 cout<<"YES"<<endl;
             }
             else
                 cout<<"NO"<<endl;
-            
+
         }
     }
 }
@@ -3048,7 +3049,7 @@ void fun_cheat()
                 Users[id].insert(temp);
             }
         }
-        
+
     }
 }
 
@@ -3071,7 +3072,7 @@ void fun_max_product(){
             }
             row[i] = sum;
         }
-        
+
         int *col = (int*)malloc(sizeof(int) * n);
         for (int i = 0; i < n; ++i) {
             int sum = 1;
@@ -3080,7 +3081,7 @@ void fun_max_product(){
             }
             col[i] = sum;
         }
-        
+
         for (int i = 0; i < m; ++i) {
             cout<<row[i]<<" ";
         }
@@ -3133,7 +3134,7 @@ int lpsDP(const char* str,int n){
                 dp[i][j] = 0;
         }
     }
-    
+
     for (int i = 1 ; i < n; ++i) {
         for (int j = 0; j + i < n; ++j) {
             if (str[j] == str[j + i]) {
@@ -3176,7 +3177,7 @@ vector<string> splitKeyWord(string sql){
 
 vector<double> BatchQueryExecutionTime(const vector<string>&sqls, const vector<double>&times, const vector<string>&keywords) {
     // your code
-    
+
     map<string,set<int>> keyWordMap;
     for (int i = 0; i < sqls.size(); ++i) {
         string temp = sqls[i];
@@ -3185,7 +3186,7 @@ vector<double> BatchQueryExecutionTime(const vector<string>&sqls, const vector<d
             keyWordMap[temp_vec[j]].insert(i);
         }
     }
-    
+
     vector<double> result;
     for (int i = 0; i < keywords.size(); ++i) {
         string temp = keywords[i];
@@ -3208,7 +3209,7 @@ bool chkLegal(string A) {
     // write code here
     const char* cStr = A.c_str();
     stack<char> sk;
-    
+
     for (int i = 0; i < strlen(cStr); ++i) {
         char tempChar = *(cStr + i);
         if (tempChar == '{' || tempChar == '(' || tempChar == '[') {
@@ -3246,7 +3247,7 @@ bool chkLegal1(string A) {
     int num[6] = {0};
     for (int i = 0; i < strlen(cStr); ++i) {
         char tempChar = *(cStr + i);
-        
+
         for(int j = 0; j < 6; ++j) {
             if (c[j] == tempChar) {
                 num[j]++;
@@ -3285,7 +3286,7 @@ void removeNode(ListNode** pHead,int val){
             delete tempNode;
         }
     }
-    
+
 }
 
 
@@ -3320,7 +3321,7 @@ int main(int argc, const char * argv[])
     string s;
     //    s.append(<#const value_type *__s#>, <#size_type __n#>)
     vector<int> vec;
-    
+
     //    fun_max_product();
     //    bS();
     //    string str;
